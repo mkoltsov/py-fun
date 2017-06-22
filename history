@@ -1,0 +1,39 @@
+googol=2**2
+googol
+googol=2*2
+googol
+googol=10*100
+print(googol*googol)
+googol=10**100
+print(googol*googol)
+print("pupa", "dupa")
+print('a'*4)
+letters = 'abcdefghijklmnopqrstuvwxyz'
+letters[1:2]
+letters[0:1]
+letters[10:]
+crypto_list = ['Yeti', 'Bigfoot', 'Loch Ness Monster']
+print(', '.join(crypto_list))
+poem = '''All that doth flow we cannot liquid name
+Or else would fire and water be the same;
+But that is liquid which is moist and wet
+Fire that property can never get.
+Then 'tis not cold that doth the fire put out
+But 'tis the wet that makes it die, no doubt.'''
+len(poem)
+poem.startswith('All')
+poem.endswith('That\'s all, folks!')
+word = 'the'
+poem.find(word)
+poem.rfind(word)
+poem.count(word)
+poem.isalnum()
+setup = 'a duck goes into a bar...'
+print(setup)
+print(setup.strip('.'))
+setup.capitalize()
+setup.upper()
+setup.lower()
+setup.swapcase()
+setup.replace('duck', 'marmoset')
+setup.replace('a ', 'a famous ', 100)
