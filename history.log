@@ -37,3 +37,8 @@ setup.lower()
 setup.swapcase()
 setup.replace('duck', 'marmoset')
 setup.replace('a ', 'a famous ', 100)
+tuple=1,2,3,4
+map={"chef":"pupa"}
+list=[1,2,4]
+tuple=(1,2,3)
+set={1,2,3,1}
