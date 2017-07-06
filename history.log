@@ -117,3 +117,130 @@ edit_story(stairs, lambda word: word.capitalize() + '!')
 ...     while number < last:
 ...         yield number
 ...         number += step        
+
+ def document_it(func):
+...     def new_function(*args, **kwargs):
+...         print('Running function:', func.__name__)
+...         print('Positional arguments:', args)
+...         print('Keyword arguments:', kwargs)
+...         result = func(*args, **kwargs)
+...         print('Result:', result)
+...         return result
+...     return new_function
+
+@document_it
+... def add_ints(a, b):
+...     return a + b
+
+ def square_it(func):
+...     def new_function(*args, **kwargs):
+...         result = func(*args, **kwargs)
+...         return result * result
+...     return new_function
+
+@document_it
+... @square_it
+... def add_ints(a, b):
+...     return a + b
+...
+
+ animal = 'fruitbat'
+>>> def change_and_print_global():
+...     global animal
+...     animal = 'wombat'
+...     print('inside change_and_print_global:', animal)
+
+animal = 'fruitbat'
+>>> def change_local():
+...     animal = 'wombat'  # local variable
+...     print('locals:', locals())
+
+globals()
+
+def amazing():
+...     '''This is the amazing function.
+...     Want to see it again?'''
+...     print('This function is named:', amazing.__name__)
+...     print('And its docstring is:', amazing.__doc__)
+
+short_list = [1, 2, 3]
+>>> position = 5
+>>> try:
+...     short_list[position]
+... except:
+...     print('Need a position between 0 and', len(short_list)-1, ' but got',
+...            position)
+...
+
+
+short_list = [1, 2, 3]
+>>> while True:
+...     value = input('Position [q to quit]? ')
+...     if value == 'q':
+...         break
+...     try:
+...         position = int(value)
+...         print(short_list[position])
+...     except IndexError as err:
+...         print('Bad index:', position)
+...     except Exception as other:
+...         print('Something else broke:', other)
+...
+
+class UppercaseException(Exception):
+...     pass
+...
+>>> words = ['eeenie', 'meenie', 'miny', 'MO']
+>>> for word in words:
+...     if word.isupper():
+...         raise UppercaseException(word)
+
+import sys
+print('Program arguments:', sys.argv)
+
+#report.py
+
+def get_description():  # see the docstring below?
+    """Return random weather, just like the pros"""
+    from random import choice
+    possibilities = ['rain', 'snow', 'sleet', 'fog', 'sun', 'who knows']
+    return choice(possibilities)
+
+#weatherman.py
+import report
+
+description = report.get_description()
+print("Today's weather:", description)
+
+import report as wr
+description = wr.get_description()
+print("Today's weather:", description)    
+
+from report import get_description as do_it
+description = do_it()
+print("Today's weather:", description)
+
+import sys
+>>> for place in sys.path:
+...     print(place)
+
+#boxes/weather.py
+from sources import daily, weekly
+
+print("Daily forecast:", daily.forecast())
+print("Weekly forecast:")
+for number, outlook in enumerate(weekly.forecast(), 1):
+    print(number, outlook)
+
+#boxes/sources/daily.py
+def forecast():
+    'fake daily forecast'
+    return 'like yesterday'    
+
+# boxes/sources/weekly.py
+def forecast():
+    """Fake weekly forecast"""
+    return ['snow', 'more snow', 'sleet',
+        'freezing rain', 'rain', 'fog', 'hail']
+
+#__init__.py is needed in the sources folder       
