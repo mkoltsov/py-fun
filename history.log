@@ -244,3 +244,297 @@ def forecast():
         'freezing rain', 'rain', 'fog', 'hail']
 
 #__init__.py is needed in the sources folder       
+
+periodic_table = {'Hydrogen': 1, 'Helium': 2}
+carbon = periodic_table.setdefault('Carbon', 12)
+
+from collections import defaultdict
+periodic_table = defaultdict(int)
+
+ from collections import defaultdict
+
+ def no_idea():
+...     return 'Huh?'
+...
+>>> bestiary = defaultdict(no_idea)
+>>> bestiary['A'] = 'Abominable Snowman'
+>>> bestiary['B'] = 'Basilisk'
+>>> bestiary['A']
+
+bestiary = defaultdict(lambda: 'Huh?')
+
+from collections import Counter
+
+breakfast = ['spam', 'spam', 'eggs', 'spam']
+breakfast_counter = Counter(breakfast)
+
+breakfast_counter.most_common()
+breakfast_counter.most_common(1)
+
+from collections import OrderedDict
+
+quotes = OrderedDict([
+...     ('Moe', 'A wise guy, huh?'),
+...     ('Larry', 'Ow!'),
+...     ('Curly', 'Nyuk nyuk!'),
+...     ])
+
+def palindrome(word):
+...     from collections import deque
+...     dq = deque(word)
+...     while len(dq) > 1:
+...        if dq.popleft() != dq.pop():
+...            return False
+...     return True
+
+import itertools
+>>> for item in itertools.chain([1, 2], ['a', 'b']):
+...     print(item)
+
+import itertools
+>>> for item in itertools.cycle([1, 2]):
+...     print(item)
+
+import itertools
+>>> for item in itertools.accumulate([1, 2, 3, 4]):
+...     print(item)
+
+import itertools
+>>> def multiply(a, b):
+...     return a * b
+...
+>>> for item in itertools.accumulate([1, 2, 3, 4], multiply):
+...     print(item)
+
+from pprint import pprint
+>>> quotes = OrderedDict([
+...     ('Moe', 'A wise guy, huh?'),
+...     ('Larry', 'Ow!'),
+...     ('Curly', 'Nyuk nyuk!'),
+...     ])
+
+
+pprint(quotes)
+{'Moe': 'A wise guy, huh?',
+ 'Larry': 'Ow!',
+ 'Curly': 'Nyuk nyuk!'}
+
+
+ class Person():
+...     pass
+
+
+class Person():
+...     def __init__(self):
+...         pass
+
+
+hunter = Person('Elmer Fudd')
+
+print('The mighty hunter: ', hunter.name)
+
+
+class Car():
+...     pass
+...
+>>> class Yugo(Car):
+...     pass
+
+
+class Car():
+...     def exclaim(self):
+...         print("I'm a Car!")
+...
+>>> class Yugo(Car):
+...     def exclaim(self):
+...         print("I'm a Yugo! Much like a Car, but more Yugo-ish.")
+
+class Person():
+...     def __init__(self, name):
+...         self.name = name
+...
+>>> class MDPerson(Person):
+...     def __init__(self, name):
+...         self.name = "Doctor " + name
+...
+>>> class JDPerson(Person):
+...     def __init__(self, name):
+...         self.name = name + ", Esquire"
+
+
+class Car():
+...     def exclaim(self):
+...         print("I'm a Car!")
+...
+>>> class Yugo(Car):
+...     def exclaim(self):
+...         print("I'm a Yugo! Much like a Car, but more Yugo-ish.")
+...     def need_a_push(self):
+...         print("A little help here?")
+
+
+class Person():
+...     def __init__(self, name):
+...         self.name = name
+
+
+class EmailPerson(Person):
+...     def __init__(self, name, email):
+...         super().__init__(name)
+...         self.email = email
+
+
+class Duck():
+...     def __init__(self, input_name):
+...         self.hidden_name = input_name
+...     def get_name(self):
+...         print('inside the getter')
+...         return self.hidden_name
+...     def set_name(self, input_name):
+...         print('inside the setter')
+...         self.hidden_name = input_name
+...     name = property(get_name, set_name)
+
+class Duck():
+...     def __init__(self, input_name):
+...         self.hidden_name = input_name
+...     @property
+...     def name(self):
+...         print('inside the getter')
+...         return self.hidden_name
+...     @name.setter
+...     def name(self, input_name):
+...         print('inside the setter')
+...         self.hidden_name = input_name
+
+
+fowl = Duck('Howard')
+>>> fowl.name
+inside the getter
+'Howard'
+
+fowl.name = 'Donald'
+inside the setter
+
+fowl.name
+inside the getter
+'Donald'
+
+class Circle():
+...     def __init__(self, radius):
+...         self.radius = radius
+...     @property
+...     def diameter(self):
+...         return 2 * self.radius
+
+c = Circle(5)
+>>> c.radius
+5
+
+c.diameter
+10
+
+
+
+class Duck():
+...     def __init__(self, input_name):
+...         self.__name = input_name
+...     @property
+...     def name(self):
+...         print('inside the getter')
+...         return self.__name
+...     @name.setter
+...     def name(self, input_name):
+...         print('inside the setter')
+...         self.__name = input_name
+
+fowl = Duck('Howard')
+>>> fowl.name
+
+fowl._Duck__name
+
+
+class A():
+...     count = 0
+...     def __init__(self):
+...         A.count += 1
+...     def exclaim(self):
+...         print("I'm an A!")
+...     @classmethod
+...     def kids(cls):
+...         print("A has", cls.count, "little objects.")
+
+easy_a = A()
+>>> breezy_a = A()
+>>> wheezy_a = A()
+>>> A.kids()
+A has 3 little objects.
+
+class CoyoteWeapon():
+...     @staticmethod
+...     def commercial():
+...         print('This CoyoteWeapon has been brought to you by Acme')
+...
+>>>
+>>> CoyoteWeapon.commercial()
+This CoyoteWeapon has been brought to you by Acme
+
+
+class Quote():
+...     def __init__(self, person, words):
+...         self.person = person
+...         self.words = words
+...     def who(self):
+...         return self.person
+...     def says(self):
+...         return self.words + '.'
+...
+>>> class QuestionQuote(Quote):
+...      def says(self):
+...          return self.words + '?'
+...
+>>> class ExclamationQuote(Quote):
+...      def says(self):
+...          return self.words + '!'
+
+
+class Bill():
+...     def __init__(self, description):
+...         self.description = description
+...
+>>> class Tail():
+...     def __init__(self, length):
+...         self.length = length
+...
+>>> class Duck():
+...     def __init__(self, bill, tail):
+...         self.bill = bill
+...         self.tail = tail
+...     def about(self):
+...         print('This duck has a', bill.description, 'bill and a',
+                  tail.length, 'tail')
+...
+>>> tail = Tail('long')
+>>> bill = Bill('wide orange')
+>>> duck = Duck(bill, tail)
+>>> duck.about()
+This duck has a wide orange bill and a long tail
+
+ from collections import namedtuple
+>>> Duck = namedtuple('Duck', 'bill tail')
+>>> duck = Duck('wide orange', 'long')
+>>> duck
+Duck(bill='wide orange', tail='long')
+>>> duck.bill
+'wide orange'
+>>> duck.tail
+'long'
+
+parts = {'bill': 'wide orange', 'tail': 'long'}
+>>> duck2 = Duck(**parts)
+>>> duck2
+Duck(bill='wide orange', tail='long')
+
+duck3 = duck2._replace(tail='magnificent', bill='crushing')
+>>> duck3
+Duck(bill='crushing', tail='magnificent')
