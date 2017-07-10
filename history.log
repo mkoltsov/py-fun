@@ -538,3 +538,651 @@ Duck(bill='wide orange', tail='long')
 duck3 = duck2._replace(tail='magnificent', bill='crushing')
 >>> duck3
 Duck(bill='crushing', tail='magnificent')
+
+'{n:d} {f:f} {s:s}'.format(n=42, f=7.03, s='string cheese')
+
+import re 
+youpattern = re.compile('You')
+result = youpattern.match('Young Frankenstein')
+
+import re
+>>> source = 'Young Frankenstein'
+>>> m = re.match('You', source)  # match starts at the beginning of source
+>>> if m:  # match returns an object; do this to see what matched
+...     print(m.group())
+...
+You
+>>> m = re.match('^You', source) # start anchor does the same
+>>> if m:
+...     print(m.group())
+...
+You
+
+m = re.findall('n', source)
+>>> m   # findall returns a list
+['n', 'n', 'n', 'n']
+>>> print('Found', len(m), 'matches')
+Found 4 matches
+
+m = re.findall('n.', source)
+>>> m
+['ng', 'nk', 'ns']
+
+import struct
+>>> valid_png_header = b'\x89PNG\r\n\x1a\n'
+>>> data = b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR' + \
+...     b'\x00\x00\x00\x9a\x00\x00\x00\x8d\x08\x02\x00\x00\x00\xc0'
+>>> if data[:8] == valid_png_header:
+...     width, height = struct.unpack('>LL', data[16:24])
+...     print('Valid PNG, width', width, 'height', height)
+... else:
+...     print('Not a valid PNG')
+...
+Valid PNG, width 154 height 141
+from construct import Struct, Magic, UBInt32, Const, String
+>>> # adapted from code at https://github.com/construct
+>>> fmt = Struct('png',
+...     Magic(b'\x89PNG\r\n\x1a\n'),
+...     UBInt32('length'),
+...     Const(String('type', 4), b'IHDR'),
+...     UBInt32('width'),
+...     UBInt32('height')
+...     )
+>>> data = b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR' + \
+...     b'\x00\x00\x00\x9a\x00\x00\x00\x8d\x08\x02\x00\x00\x00\xc0'
+>>> result = fmt.parse(data)
+>>> print(result)
+Container:
+    length = 13
+    type = b'IHDR'
+    width = 154
+    height = 141
+>>> print(result.width, result.height)
+154, 141
+
+import binascii
+>>> valid_png_header = b'\x89PNG\r\n\x1a\n'
+>>> print(binascii.hexlify(valid_png_header))
+b'89504e470d0a1a0a'
+
+poem = '''There was a young lady named Bright,
+... Whose speed was far faster than light;
+... She started one day
+... In a relative way,
+... And returned on the previous night.'''
+>>> len(poem)
+150
+
+fout = open('relativity', 'wt')
+>>> fout.write(poem)
+150
+>>> fout.close()
+
+fout = open('relativity', 'wt')
+>>> print(poem, file=fout)
+>>> fout.close()
+
+fout = open('relativity', 'wt')
+>>> print(poem, file=fout, sep='', end='')
+>>> fout.close()
+
+fout = open('relativity', 'wt')
+>>> size = len(poem)
+>>> offset = 0
+>>> chunk = 100
+>>> while True:
+...     if offset > size:
+...          break
+...     fout.write(poem[offset:offset+chunk])
+...     offset += chunk
+...
+100
+50
+>>> fout.close()
+
+try:
+...     fout = open('relativity', 'xt')]
+...     fout.write('stomp stomp stomp')
+... except FileExistsError:
+...     print('relativity already exists!. That was a close one.')
+...
+relativity already exists!. That was a close one.
+
+try:
+...     fout = open('relativity', 'xt')]
+...     fout.write('stomp stomp stomp')
+... except FileExistsError:
+...     print('relativity already exists!. That was a close one.')
+...
+relativity already exists!. That was a close one.
+
+
+poem = ''
+>>> fin = open('relativity', 'rt' )
+>>> while True:
+...     line = fin.readline()
+...     if not line:
+...         break
+...     poem += line
+...
+>>> fin.close()
+>>> len(poem)
+150
+
+ poem = ''
+>>> fin = open('relativity', 'rt' )
+>>> for line in fin:
+...     poem += line
+...
+>>> fin.close()
+>>> len(poem)
+150
+
+fin = open('relativity', 'rt' )
+>>> lines = fin.readlines()
+>>> fin.close()
+>>> print(len(lines), 'lines read')
+5 lines read
+>>> for line in lines:
+...     print(line, end='')
+...
+
+bdata = bytes(range(0, 256))
+>>> len(bdata)
+
+fout = open('bfile', 'wb')
+>>> fout.write(bdata)
+256
+>>> fout.close()
+
+fin = open('bfile', 'rb')
+>>> bdata = fin.read()
+>>> len(bdata)
+256
+>>> fin.close()
+
+with open('relativity', 'wt') as fout:
+...     fout.write(poem)
+...
+
+fin = open('bfile', 'rb')
+>>> fin.tell()
+
+fin.seek(255)
+255
+
+import csv
+>>> villains = [
+...     ['Doctor', 'No'],
+...     ['Rosa', 'Klebb'],
+...     ['Mister', 'Big'],
+...     ['Auric', 'Goldfinger'],
+...     ['Ernst', 'Blofeld'],
+...     ]
+>>> with open('villains', 'wt') as fout:  # a context manager
+...     csvout = csv.writer(fout)
+...     csvout.writerows(villains)
+
+import csv
+>>> with open('villains', 'rt') as fin:  # context manager
+...     cin = csv.reader(fin)
+...     villains = [row for row in cin]  # This uses a list comprehension
+...
+>>> print(villains)
+[['Doctor', 'No'], ['Rosa', 'Klebb'], ['Mister', 'Big'],
+['Auric', 'Goldfinger'], ['Ernst', 'Blofeld']]
+
+import csv
+>>> with open('villains', 'rt') as fin:
+...     cin = csv.DictReader(fin, fieldnames=['first', 'last'])
+...     villains = [row for row in cin]
+...
+>>> print(villains)
+[{'last': 'No', 'first': 'Doctor'},
+{'last': 'Klebb', 'first': 'Rosa'},
+{'last': 'Big', 'first': 'Mister'},
+{'last': 'Goldfinger', 'first': 'Auric'},
+{'last': 'Blofeld', 'first': 'Ernst'}]
+
+import csv
+villains = [
+    {'first': 'Doctor', 'last': 'No'},
+    {'first': 'Rosa', 'last': 'Klebb'},
+    {'first': 'Mister', 'last': 'Big'},
+    {'first': 'Auric', 'last': 'Goldfinger'},
+    {'first': 'Ernst', 'last': 'Blofeld'},
+    ]
+with open('villains', 'wt') as fout:
+    cout = csv.DictWriter(fout, ['first', 'last'])
+    cout.writeheader()
+    cout.writerows(villains)
+
+
+    import csv
+villains = [
+    {'first': 'Doctor', 'last': 'No'},
+    {'first': 'Rosa', 'last': 'Klebb'},
+    {'first': 'Mister', 'last': 'Big'},
+    {'first': 'Auric', 'last': 'Goldfinger'},
+    {'first': 'Ernst', 'last': 'Blofeld'},
+    ]
+with open('villains', 'wt') as fout:
+    cout = csv.DictWriter(fout, ['first', 'last'])
+    cout.writeheader()
+    cout.writerows(villains)
+
+>>> import xml.etree.ElementTree as et
+>>> tree = et.ElementTree(file='menu.xml')
+>>> root = tree.getroot()
+>>> root.tag
+'menu'
+>>> for child in root:
+...     print('tag:', child.tag, 'attributes:', child.attrib)
+...     for grandchild in child:
+...         print('\ttag:', grandchild.tag, 'attributes:', grandchild.attrib)
+...
+tag: breakfast attributes: {'hours': '7-11'}
+    tag: item attributes: {'price': '$6.00'}
+    tag: item attributes: {'price': '$4.00'}
+tag: lunch attributes: {'hours': '11-3'}
+    tag: item attributes: {'price': '$5.00'}
+tag: dinner attributes: {'hours': '3-10'}
+    tag: item attributes: {'price': '8.00'}
+>>> len(root)     # number of menu sections
+3
+>>> len(root[0])  # number of breakfast items
+2
+
+menu = \
+... {
+... "breakfast": {
+...         "hours": "7-11",
+...         "items": {
+...                 "breakfast burritos": "$6.00",
+...                 "pancakes": "$4.00"
+...                 }
+...         },
+... "lunch" : {
+...         "hours": "11-3",
+...         "items": {
+...                 "hamburger": "$5.00"
+...                 }
+...         },
+... "dinner": {
+...         "hours": "3-10",
+...         "items": {
+...                 "spaghetti": "$8.00"
+...                 }
+...         }
+... }
+
+menu2 = json.loads(menu_json)
+>>> menu2
+{'breakfast': {'items': {'breakfast burritos': '$6.00', 'pancakes':
+'$4.00'}, 'hours': '7-11'}, 'lunch': {'items': {'hamburger': '$5.00'},
+'hours': '11-3'}, 'dinner': {'items': {'spaghetti': '$8.00'}, 'hours': '3-10'}}
+
+import json
+>>> menu_json = json.dumps(menu)
+>>> menu_json
+'{"dinner": {"items": {"spaghetti": "$8.00"}, "hours": "3-10"},
+"lunch": {"items": {"hamburger": "$5.00"}, "hours": "11-3"},
+"breakfast": {"items": {"breakfast burritos": "$6.00", "pancakes":
+"$4.00"}, "hours": "7-11"}}'    
+
+ import datetime
+>>> now = datetime.datetime.utcnow()
+>>> now
+datetime.datetime(2013, 2, 22, 3, 49, 27, 483336)
+>>> json.dumps(now)
+Traceback (most recent call last):
+# ... (deleted stack trace to save trees)
+TypeError: datetime.datetime(2013, 2, 22, 3, 49, 27, 483336) is not JSON serializable
+>>>
+
+now_str = str(now)
+>>> json.dumps(now_str)
+'"2013-02-22 03:49:27.483336"'
+>>> from time import mktime
+>>> now_epoch = int(mktime(now.timetuple()))
+>>> json.dumps(now_epoch)
+'1361526567'
+
+
+class DTEncoder(json.JSONEncoder):
+...     def default(self, obj):
+...         # isinstance() checks the type of obj
+...         if isinstance(obj, datetime.datetime):
+...             return int(mktime(obj.timetuple()))
+...         # else it's something the normal decoder knows:
+...         return json.JSONEncoder.default(self, obj)
+...
+>>> json.dumps(now, cls=DTEncoder)
+
+pip install yaml
+
+name:
+  first: James
+  last: McIntyre
+dates:
+  birth: 1828-05-25
+  death: 1906-03-31
+details:
+  bearded: true
+  themes: [cheese, Canada]
+books:
+  url: http://www.gutenberg.org/files/36068/36068-h/36068-h.htm
+poems:
+  - title: 'Motto'
+    text: |
+      Politeness, perseverance and pluck,
+      To their possessor will bring good luck.
+  - title: 'Canadian Charms'
+    text: |
+      Here industry is not in vain,
+      For we have bounteous crops of grain,
+      And you behold on every field
+      Of grass and roots abundant yield,
+      But after all the greatest charm
+      Is the snug home upon the farm,
+      And stone walls now keep cattle warm.
+
+      import yaml
+>>> with open('mcintyre.yaml', 'rt') as fin:
+>>>     text = fin.read()
+>>> data = yaml.load(text)
+>>> data['details']
+{'themes': ['cheese', 'Canada'], 'bearded': True}
+>>> len(data['poems'])
+2
+
+[english]
+greeting = Hello
+
+[french]
+greeting = Bonjour
+
+[files]
+home = /usr/local
+# simple interpolation:
+bin = %(home)s/bin
+
+>>> import configparser
+>>> cfg = configparser.ConfigParser()
+>>> cfg.read('settings.cfg')
+['settings.cfg']
+>>> cfg
+<configparser.ConfigParser object at 0x1006be4d0>
+>>> cfg['french']
+<Section: french>
+>>> cfg['french']['greeting']
+'Bonjour'
+>>> cfg['files']['bin']
+'/usr/local/bin'
+
+import pickle
+>>> import datetime
+>>> now1 = datetime.datetime.utcnow()
+>>> pickled = pickle.dumps(now1)
+>>> now2 = pickle.loads(pickled)
+>>> now1
+datetime.datetime(2014, 6, 22, 23, 24, 19, 195722)
+>>> now2
+datetime.datetime(2014, 6, 22, 23, 24, 19, 195722)
+
+import pickle
+>>> class Tiny():
+...     def __str__(self):
+...        return 'tiny'
+...
+>>> obj1 = Tiny()
+>>> obj1
+<__main__.Tiny object at 0x10076ed10>
+>>> str(obj1)
+'tiny'
+>>> pickled = pickle.dumps(obj1)
+>>> pickled
+b'\x80\x03c__main__\nTiny\nq\x00)\x81q\x01.'
+>>> obj2 = pickle.loads(pickled)
+>>> obj2
+<__main__.Tiny object at 0x10076e550>
+>>> str(obj2)
+'tiny'
+
+
+import sqlite3
+>>> conn = sqlite3.connect('enterprise.db')
+>>> curs = conn.cursor()
+>>> curs.execute('''CREATE TABLE zoo
+    (critter VARCHAR(20) PRIMARY KEY,
+     count INT,
+     damages FLOAT)''')
+<sqlite3.Cursor object at 0x1006a22d0>
+
+>>> curs.execute('INSERT INTO zoo VALUES("duck", 5, 0.0)')
+<sqlite3.Cursor object at 0x1006a22d0>
+>>> curs.execute('INSERT INTO zoo VALUES("bear", 2, 1000.0)')
+<sqlite3.Cursor object at 0x1006a22d0>
+
+ins = 'INSERT INTO zoo (critter, count, damages) VALUES(?, ?, ?)'
+>>> curs.execute(ins, ('weasel', 1, 2000.0))
+<sqlite3.Cursor object at 0x1006a22d0>
+
+curs.execute('SELECT * FROM zoo')
+<sqlite3.Cursor object at 0x1006a22d0>
+>>> rows = curs.fetchall()
+>>> print(rows)
+[('duck', 5, 0.0), ('bear', 2, 1000.0), ('weasel', 1, 2000.0)]
+
+curs.execute('SELECT * from zoo ORDER BY count')
+<sqlite3.Cursor object at 0x1006a22d0>
+>>> curs.fetchall()
+[('weasel', 1, 2000.0), ('bear', 2, 1000.0), ('duck', 5, 0.0)]
+
+curs.execute('SELECT * from zoo ORDER BY count DESC')
+<sqlite3.Cursor object at 0x1006a22d0>
+>>> curs.fetchall()
+[('duck', 5, 0.0), ('bear', 2, 1000.0), ('weasel', 1, 2000.0)]
+
+urs.execute('''SELECT * FROM zoo WHERE
+...     damages = (SELECT MAX(damages) FROM zoo)''')
+<sqlite3.Cursor object at 0x1006a22d0>
+>>> curs.fetchall()
+[('weasel', 1, 2000.0)]
+
+curs.close()
+conn.close()
+
+ pip install sqlalchemy
+
+ import sqlalchemy as sa
+
+ conn = sa.create_engine('sqlite://')
+
+ conn.execute('''CREATE TABLE zoo
+...     (critter VARCHAR(20) PRIMARY KEY,
+...      count INT,
+...      damages FLOAT)''')
+<sqlalchemy.engine.result.ResultProxy object at 0x1017efb10>
+
+ins = 'INSERT INTO zoo (critter, count, damages) VALUES (?, ?, ?)'
+>>> conn.execute(ins, 'duck', 10, 0.0)
+<sqlalchemy.engine.result.ResultProxy object at 0x1017efb50>
+>>> conn.execute(ins, 'bear', 2, 1000.0)
+<sqlalchemy.engine.result.ResultProxy object at 0x1017ef090>
+>>> conn.execute(ins, 'weasel', 1, 2000.0)
+<sqlalchemy.engine.result.ResultProxy object at 0x1017ef450>
+
+rows = conn.execute('SELECT * FROM zoo')
+
+ print(rows)
+
+ for row in rows:
+...     print(row)
+...
+('duck', 10, 0.0)
+('bear', 2, 1000.0)
+('weasel', 1, 2000.0)
+
+for row in rows:
+...     print(row)
+...
+('duck', 10, 0.0)
+('bear', 2, 1000.0)
+('weasel', 1, 2000.0)
+
+meta = sa.MetaData()
+>>> zoo = sa.Table('zoo', meta,
+...     sa.Column('critter', sa.String, primary_key=True),
+...     sa.Column('count', sa.Integer),
+...     sa.Column('damages', sa.Float)
+...    )
+>>> meta.create_all(conn)
+
+... conn.execute(zoo.insert(('bear', 2, 1000.0)))
+<sqlalchemy.engine.result.ResultProxy object at 0x1017ea910>
+>>> conn.execute(zoo.insert(('weasel', 1, 2000.0)))
+<sqlalchemy.engine.result.ResultProxy object at 0x1017eab10>
+>>> conn.execute(zoo.insert(('duck', 10, 0)))
+<sqlalchemy.engine.result.ResultProxy object at 0x1017eac50>
+
+
+import sqlalchemy as sa
+>>> from sqlalchemy.ext.declarative import declarative_base
+
+ conn = sa.create_engine('sqlite:///zoo.db')
+
+ Base = declarative_base()
+>>> class Zoo(Base):
+...     __tablename__ = 'zoo'
+...     critter = sa.Column('critter', sa.String, primary_key=True)
+...     count = sa.Column('count', sa.Integer)
+...     damages = sa.Column('damages', sa.Float)
+...     def __init__(self, critter, count, damages):
+...         self.critter = critter
+...         self.count = count
+...         self.damages = damages
+...     def __repr__(self):
+...         return "<Zoo({}, {}, {})>".format(self.critter, self.count, self.damages)
+
+Base.metadata.create_all(conn)
+
+first = Zoo('duck', 10, 0.0)
+>>> second = Zoo('bear', 2, 1000.0)
+>>> third = Zoo('weasel', 1, 2000.0)
+>>> first
+<Zoo(duck, 10, 0.0)>
+
+ from sqlalchemy.orm import sessionmaker
+>>> Session = sessionmaker(bind=conn)
+>>> session = Session()
+
+
+ from sqlalchemy.orm import sessionmaker
+>>> Session = sessionmaker(bind=conn)
+>>> session = Session()
+session.commit()
+
+
+sqlite3 zoo.db
+SQLite version 3.6.12
+Enter ".help" for instructions
+Enter SQL statements terminated with a ";"
+sqlite> .tables
+zoo
+sqlite> select * from zoo;
+duck|10|0.0
+bear|2|1000.0
+weasel|1|2000.0
+
+
+$ pip install python-memcached
+
+import memcache
+>>> db = memcache.Client(['127.0.0.1:11211'])
+>>> db.set('marco', 'polo')
+True
+>>> db.get('marco')
+'polo'
+>>> db.set('ducks', 0)
+True
+>>> db.get('ducks')
+0
+>>> db.incr('ducks', 2)
+2
+>>> db.get('ducks')
+2
+
+
+pip install redis
+
+import redis
+>>> conn = redis.Redis()
+
+conn.keys('*')
+[]
+
+conn.set('secret', 'ni!')
+True
+>>> conn.set('carats', 24)
+True
+>>> conn.set('fever', '101.5')
+True
+
+ conn.get('secret')
+b'ni!'
+>>> conn.get('carats')
+b'24'
+>>> conn.get('fever')
+b'101.5'
+
+ conn.setnx('secret', 'icky-icky-icky-ptang-zoop-boing!')
+False
+
+import time
+>>> key = 'now you see it'
+>>> conn.set(key, 'but not for long')
+True
+>>> conn.expire(key, 5)
+True
+>>> conn.ttl(key)
+5
+>>> conn.get(key)
+b'but not for long'
+>>> time.sleep(6)
+>>> conn.get(key)
+>>>
+
+import urllib.request as ur
+>>> url = 'http://www.iheartquotes.com/api/v1/random'
+>>> conn = ur.urlopen(url)
+>>> print(conn)
+<http.client.HTTPResponse object at 0x1006fad50>
+
+data = conn.read()
+>>> print(data)
+b'You will be surprised by a loud noise.\r\n\n[codehappy]
+http://iheartquotes.com/fortune/show/20447\n'
+
+ print(conn.status)
+200
+
+print(conn.getheader('Content-Type'))
+text/plain
+
+for key, value in conn.getheaders():
+...     print(key, value)
+...
+Server nginx
+Date Sat, 24 Aug 2013 22:48:39 GMT
+Content-Type text/plain
+Transfer-Encoding chunked
+Connection close
+Etag "8477e32e6d053fcfdd6750f0c9c306d6"
+X-Ua-Compatible IE=Edge,chrome=1
+X-Runtime 0.076496
+Cache-Control max-age=0, private, must-revalidate
+
+pip install requests
+
+import requests>>> url = 'http://www.iheartquotes.com/api/v1/random'>>> resp = requests.get(url)>>> resp<Response [200]>>>> print(resp.text)I know that there are people who do not love their fellow man, and I hatepeople like that!    -- Tom Lehrer, Satirist and Professor[codehappy] http://iheartquotes.com/fortune/show/21465
