@@ -1301,3 +1301,317 @@ if __name__ == '__main__':
         for num, link in enumerate(get_links(url), start=1):
             print(num, link)
         print()
+
+fout = open('oops.txt', 'wt')
+>>> print('Oops, I created a file.', file=fout)
+>>> fout.close()
+
+
+>>> import os
+>>> os.path.exists('oops.txt')
+True
+>>> os.path.exists('./oops.txt')
+True
+>>> os.path.exists('waffles')
+False
+>>> os.path.exists('.')
+True
+>>> os.path.exists('..')
+True
+
+ame = 'oops.txt'
+>>> os.path.isfile(name)
+
+os.path.isdir(name)
+
+>>> os.path.isabs(name)
+False
+>>> os.path.isabs('/big/fake/name')
+True
+>>> os.path.isabs('big/fake/name/without/a/leading/slash')
+
+import shutil
+>>> shutil.copy('oops.txt', 'ohno.txt')
+
+import os
+>>> os.rename('ohno.txt', 'ohwell.txt')
+
+s.link('oops.txt', 'yikes.txt')
+>>> os.path.isfile('yikes.txt')
+True
+
+os.path.islink('yikes.txt')
+False
+>>> os.symlink('oops.txt', 'jeepers.txt')
+>>> os.path.islink('jeepers.txt')
+True
+
+os.chmod('oops.txt', 0o400)
+
+import stat
+>>> os.chmod('oops.txt', stat.S_IRUSR)
+
+
+uid = 5
+>>> gid = 22
+>>> os.chown('oops', uid, gid)
+
+os.path.abspath('oops.txt')
+'/usr/gaberlunzie/oops.txt'
+
+
+os.path.realpath('jeepers.txt')
+'/usr/gaberlunzie/oops.txt'
+
+os.remove('oops.txt')
+>>> os.path.exists('oops.txt')
+
+
+os.mkdir('poems')
+>>> os.path.exists('poems')
+True
+
+os.rmdir('poems')
+>>> os.path.exists('poems')
+
+ os.mkdir('poems')
+
+ os.listdir('poems')
+
+ os.mkdir('poems/mcintyre')
+>>> os.listdir('poems')
+['mcintyre']
+
+fout = open('poems/mcintyre/the_good_man', 'wt')
+>>> fout.write('''Cheerful and happy was his mood,
+... He to the poor was kind and good,
+... And he oft' times did find them food,
+... Also supplies of coal and wood,
+... He never spake a word was rude,
+... And cheer'd those did o'er sorrows brood,
+... He passed away not understood,
+... Because no poet in his lays
+... Had penned a sonnet in his praise,
+... 'Tis sad, but such is world's ways.
+... ''')
+344
+>>> fout.close()
+
+os.listdir('poems/mcintyre')
+['the_good_man']
+
+import os
+>>> os.chdir('poems')
+>>> os.listdir('.')
+['mcintyre']
+
+import glob
+>>> glob.glob('m*')
+['mcintyre']
+
+glob.glob('??')
+[]
+
+glob.glob('m??????e')
+['mcintyre']
+
+glob.glob('[klm]*e')
+['mcintyre']
+
+import os
+>>> os.getpid()
+76051
+>>> os.getcwd()
+'/Users/williamlubanovic'
+
+os.getuid()
+501
+>>> os.getgid()
+20
+
+import subprocess
+>>> ret = subprocess.getoutput('date')
+>>> ret
+'Sun Mar 30 22:54:37 CDT 2014'
+
+ret = subprocess.getoutput('date -u')
+>>> ret
+'Mon Mar 31 03:55:01 UTC 2014'
+
+ret = subprocess.getoutput('date -u | wc')
+>>> ret
+'       1       6      29'
+
+ret = subprocess.check_output(['date', '-u'])
+>>> ret
+b'Mon Mar 31 04:01:50 UTC 2014\n'
+
+ret = subprocess.getstatusoutput('date')
+>>> ret
+(0, 'Sat Jan 18 21:36:23 CST 2014')
+
+ret = subprocess.call('date')
+Sat Jan 18 21:33:11 CST 2014
+>>> ret
+0
+
+ret = subprocess.call('date -u', shell=True)
+Tue Jan 21 04:40:04 UTC 2014
+
+ ret = subprocess.call(['date', '-u'])
+Tue Jan 21 04:41:59 UTC 2014
+
+import multiprocessing
+import os
+
+def do_this(what):
+    whoami(what)
+
+def whoami(what):
+    print("Process %s says: %s" % (os.getpid(), what))
+
+if __name__ == "__main__":
+    whoami("I'm the main program")
+    for n in range(4):
+        p = multiprocessing.Process(target=do_this,
+          args=("I'm function %s" % n,))
+        p.start()
+
+import multiprocessing
+import time
+import os
+
+def whoami(name):
+    print("I'm %s, in process %s" % (name, os.getpid()))
+
+def loopy(name):
+    whoami(name)
+    start = 1
+    stop = 1000000
+    for num in range(start, stop):
+        print("\tNumber %s of %s. Honk!" % (num, stop))
+        time.sleep(1)
+
+if __name__ == "__main__":
+    whoami("main")
+    p = multiprocessing.Process(target=loopy, args=("loopy",))
+    p.start()
+    time.sleep(5)
+    p.terminate()
+
+    import calendar
+>>> calendar.isleap(1900)
+False
+>>> calendar.isleap(1996)
+True
+>>> calendar.isleap(1999)
+False
+>>> calendar.isleap(2000)
+True
+>>> calendar.isleap(2002)
+False
+>>> calendar.isleap(2004)
+True
+
+from datetime import date
+>>> halloween = date(2014, 10, 31)
+>>> halloween
+datetime.date(2014, 10, 31)
+>>> halloween.day
+31
+>>> halloween.month
+10
+>>> halloween.year
+2014
+halloween.isoformat()
+'2014-10-31'
+
+from datetime import date
+>>> now = date.today()
+>>> now
+datetime.date(2014, 2, 2)
+
+from datetime import timedelta
+>>> one_day = timedelta(days=1)
+>>> tomorrow = now + one_day
+>>> tomorrow
+datetime.date(2014, 2, 3)
+>>> now + 17*one_day
+datetime.date(2014, 2, 19)
+>>> yesterday = now - one_day
+>>> yesterday
+datetime.date(2014, 2, 1)
+
+from datetime import time
+>>> noon = time(12, 0, 0)
+>>> noon
+datetime.time(12, 0)
+>>> noon.hour
+12
+>>> noon.minute
+0
+>>> noon.second
+0
+>>> noon.microsecond
+0
+
+from datetime import datetime
+>>> some_day = datetime(2014, 1, 2, 3, 4, 5, 6)
+>>> some_day
+datetime.datetime(2014, 1, 2, 3, 4, 5, 6)
+
+from datetime import datetime>>> now = datetime.now()>>> nowdatetime.datetime(2014, 2, 2, 23, 15, 34, 694988)14>>> now.month2>>> now.day2>>> now.hour23>>> now.minute15>>> now.second34>>> now.microsecond694988
+
+from datetime import datetime, time, date
+>>> noon = time(12)
+>>> this_day = date.today()
+>>> noon_today = datetime.combine(this_day, noon)
+>>> noon_today
+datetime.datetime(2014, 2, 2, 12, 0)
+
+>>> noon_today.date()
+datetime.date(2014, 2, 2)
+>>> noon_today.time()
+datetime.time(12, 0)        
+
+import time
+>>> now = time.time()
+>>> now
+1391488263.664645
+
+time.ctime(now)
+
+time.localtime(now)
+time.struct_time(tm_year=2014, tm_mon=2, tm_mday=3, tm_hour=22, tm_min=31,
+tm_sec=3, tm_wday=0, tm_yday=34, tm_isdst=0)
+>>> time.gmtime(now)
+time.struct_time(tm_year=2014, tm_mon=2, tm_mday=4, tm_hour=4, tm_min=31,
+tm_sec=3, tm_wday=1, tm_yday=35, tm_isdst=0)
+
+tm = time.localtime(now)
+>>> time.mktime(tm)
+1391488263.0
+
+
+import time
+>>> now = time.time()
+>>> time.ctime(now)
+'Mon Feb  3 21:14:36 2014'
+
+>>> import locale
+>>> from datetime import date
+>>> halloween = date(2014, 10, 31)
+>>> for lang_country in ['en_us', 'fr_fr', 'de_de', 'es_es', 'is_is',]:
+...     locale.setlocale(locale.LC_TIME, lang_country)
+...     halloween.strftime('%A, %B %d')
+
+
+import locale
+>>> names = locale.locale_alias.keys()
+
+good_names = [name for name in names if \
+len(name) == 5 and name[2] == '_']
+
+de = [name for name in good_names if name.startswith('de')]
+
+
