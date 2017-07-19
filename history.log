@@ -1614,4 +1614,366 @@ len(name) == 5 and name[2] == '_']
 
 de = [name for name in good_names if name.startswith('de')]
 
+import threading, queue
+import time
 
+def washer(dishes, dish_queue):
+    for dish in dishes:
+    print ("Washing", dish)
+        time.sleep(5)
+        dish_queue.put(dish)
+
+def dryer(dish_queue):
+        while True:
+        dish = dish_queue.get()
+        print ("Drying", dish)
+        time.sleep(10)
+        dish_queue.task_done()
+
+
+dish_queue = queue.Queue()
+for n in range(2):
+    dryer_thread = threading.Thread(target=dryer, args=(dish_queue,))
+        dryer_thread.start()
+
+dishes = ['salad', 'bread', 'entree', 'desert']
+washer(dishes, dish_queue)
+dish_queue.join()
+
+import gevent
+from gevent import socket
+hosts = ['www.crappytaxidermy.com', 'www.walterpottertaxidermy.com',
+    'www.antique-taxidermy.com']
+jobs = [gevent.spawn(gevent.socket.gethostbyname, host) for host in hosts]
+gevent.joinall(jobs, timeout=5)
+for job in jobs:
+    print(job.value)
+
+
+from twisted.internet import protocol, reactor
+
+class Knock(protocol.Protocol):
+    def dataReceived(self, data):
+        print 'Client:', data
+        if data.startswith("Knock knock"):
+            response = "Who's there?"
+        else:
+            response = data + " who?"
+        print 'Server:', response
+        self.transport.write(response)
+
+class KnockFactory(protocol.Factory):
+    def buildProtocol(self, addr):
+        return Knock()
+
+reactor.listenTCP(8000, KnockFactory())
+reactor.run()
+
+from twisted.internet import reactor, protocol
+
+class KnockClient(protocol.Protocol):
+    def connectionMade(self):
+        self.transport.write("Knock knock")
+
+    def dataReceived(self, data):
+        if data.startswith("Who's there?"):
+            response = "Disappearing client"
+            self.transport.write(response)
+        else:
+            self.transport.loseConnection()
+            reactor.stop()
+
+class KnockFactory(protocol.ClientFactory):
+    protocol = KnockClient
+
+def main():
+    f = KnockFactory()
+    reactor.connectTCP("localhost", 8000, f)
+    reactor.run()
+
+if __name__ == '__main__':
+    main()
+
+
+from datetime import datetime
+import socket
+
+server_address = ('localhost', 6789)
+max_size = 4096
+
+print('Starting the server at', datetime.now())
+print('Waiting for a client to call.')
+server = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+server.bind(server_address)
+
+data, client = server.recvfrom(max_size)
+
+print('At', datetime.now(), client, 'said', data)
+server.sendto(b'Are you talking to me?', client)
+server.close()
+
+import socket
+from datetime import datetime
+
+server_address = ('localhost', 6789)
+max_size = 4096
+
+print('Starting the client at', datetime.now())
+client = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+client.sendto(b'Hey!', server_address)
+data, server = client.recvfrom(max_size)
+print('At', datetime.now(), server, 'said', data)
+client.close()
+
+import socket
+>>> socket.gethostbyname('www.crappytaxidermy.com')
+'66.6.44.4'
+>>> socket.gethostbyname_ex('www.crappytaxidermy.com')
+('crappytaxidermy.com', ['www.crappytaxidermy.com'], ['66.6.44.4'])
+
+ socket.getaddrinfo('www.crappytaxidermy.com', 80)
+
+  socket.getaddrinfo('www.crappytaxidermy.com', 80, socket.AF_INET,
+socket.SOCK_STREAM)
+[(2, 1, 6, '', ('66.6.44.4', 80))]
+
+ import socket
+>>> socket.getservbyname('http')
+80
+>>> socket.getservbyport(80)
+'http'
+
+
+import requests
+url = "https://gdata.youtube.com/feeds/api/standardfeeds/top_rated?alt=json"
+response = requests.get(url)
+data = response.json()
+for video in data['feed']['entry'][0:6]:
+    print(video['title']['$t'])
+
+
+from xmlrpc.server import SimpleXMLRPCServer
+
+def double(num):
+    return num * 2
+
+server = SimpleXMLRPCServer(("localhost", 6789))
+server.register_function(double, "double")
+server.serve_forever()
+
+import xmlrpc.client
+
+proxy = xmlrpc.client.ServerProxy("http://localhost:6789/")
+num = 7
+result = proxy.double(num)
+print("Double %s is %s" % (num, result))
+
+from msgpackrpc import Server, Address
+
+class Services():
+    def double(self, num):
+        return num * 2
+
+server = Server(Services())
+server.listen(Address("localhost", 6789))
+server.start()
+
+from msgpackrpc import Client, Address
+
+client = Client(Address("localhost", 6789))
+num = 8
+result =  client.call('double', num)
+print("Double %s is %s" % (num, result))
+
+pip install flask==0.9.0
+
+pip install 'flask>=0.9.0'
+
+def ftoc(f_temp):
+    "Convert Fahrenheit temperature <f_temp> to Celsius and return it."
+    f_boil_temp = 212.0
+    f_freeze_temp = 32.0
+    c_boil_temp = 100.0
+    c_freeze_temp = 0.0
+    f_range = f_boil_temp - f_freeze_temp
+    c_range = c_boil_temp - c_freeze_temp
+    f_c_ratio = c_range / f_range
+    c_temp = (f_temp - f_freeze_temp) * f_c_ratio + c_freeze_temp
+    return c_temp
+
+if __name__ == '__main__':
+    for f_temp in [-40.0, 0.0, 32.0, 100.0, 212.0]:
+        c_temp = ftoc(f_temp)
+        print('%f F => %f C' % (f_temp, c_temp
+
+> import logging
+>>> logging.debug("Looks like rain")
+>>> logging.info("And hail")
+>>> logging.warn("Did I hear thunder?")
+WARNING:root:Did I hear thunder?
+>>> logging.error("Was that lightning?")
+ERROR:root:Was that lightning?
+>>> logging.critical("Stop fencing and get inside!")
+CRITICAL:root:Stop fencing and get inside!
+
+import logging
+>>> logging.basicConfig(level=logging.DEBUG)
+>>> logging.debug("It's raining again")
+DEBUG:root:It's raining again
+>>> logging.info("With hail the size of hailstones")
+INFO:root:With hail the size of hailstones
+
+import logging
+>>> logging.basicConfig(level='DEBUG', filename='blue_ox.log')
+>>> logger = logging.getLogger('bunyan')
+>>> logger.debug("Where's my axe?")
+>>> logger.warn("I need my axe")
+>>>
+
+from time import time
+
+t1 = time()
+num = 5
+num *= 2
+print(time() - t1)
+
+
+from timeit import timeit
+print(timeit('num = 5; num *= 2', number=1))
+
+
+from timeit import timeit
+
+def make_list_1():
+    result = []
+    for value in range(1000):
+        result.append(value)
+    return result
+
+def make_list_2():
+    result = [value for value in range(1000)]
+    return result
+
+print('make_list_1 takes', timeit(make_list_1, number=1000), 'seconds')
+print('make_list_2 takes', timeit(make_list_2, number=1000), 'seconds')
+
+
+import csv
+from collections import Counter
+
+counts = Counter()
+with open('zoo.csv', 'rt') as fin:
+    cin = csv.reader(fin)
+    for num, row in enumerate(cin):
+        if num > 0:
+            counts[row[0]] += int(row[-1])
+for animal, hush in counts.items():
+    print("%10s %10s" % (animal, hush))
+
+
+import bubbles
+
+p = bubbles.Pipeline()
+p.source(bubbles.data_object('csv_source', 'zoo.csv', infer_fields=True))
+p.aggregate('animal', 'hush')
+p.pretty_print()
+
+import math
+>>> math.pi
+>>> 3.141592653589793
+>>> math.e
+2.718281828459045
+
+ math.fabs(98.6)
+98.6
+>>> math.fabs(-271.1)
+271.1
+
+ math.floor(98.6)
+98
+>>> math.floor(-271.1)
+-272
+>>> math.ceil(98.6)
+99
+>>> math.ceil(-271.1)
+-271
+
+math.factorial(0)
+1
+>>> math.factorial(1)
+1
+>>> math.factorial(2)
+2
+>>> math.factorial(3)
+6
+>>> math.factorial(10)
+3628800
+
+ math.log(1.0)
+0.0
+>>> math.log(math.e)
+1.0
+math.log(8, 2)
+3.0
+
+math.pow(2, 3)
+8.0
+2**3
+8
+>>> 2.0**3
+8.0
+
+math.sqrt(100.0)
+10.0
+
+x = 3.0
+>>> y = 4.0
+>>> math.hypot(x, y)
+5.0
+
+ math.sqrt(x*x + y*y)
+5.0
+>>> math.sqrt(x**2 + y**2)
+5.0
+
+
+math.radians(180.0)
+3.141592653589793
+>>> math.degrees(math.pi)
+180.0
+
+ x = 10.0 / 3.0
+>>> x
+3.3333333333333335
+
+from decimal import Decimal
+>>> price = Decimal('19.99')
+>>> tax = Decimal('0.06')
+>>> total = price + (price * tax)
+>>> total
+Decimal('21.1894')
+
+penny = Decimal('0.01')
+>>> total.quantize(penny)
+Decimal('21.19')
+
+from fractions import Fraction
+>>> Fraction(1,  3) * Fraction(2, 3)
+Fraction(2, 9)
+
+Fraction(1.0/3.0)
+Fraction(6004799503160661, 18014398509481984)
+>>> Fraction(Decimal('1.0')/Decimal('3.0'))
+Fraction(3333333333333333333333333333, 10000000000000000000000000000)
+
+import fractions
+>>> fractions.gcd(24, 16)
+8
+
+b = np.array( [2, 4, 6, 8] )
+>>> b
+array([2, 4, 6, 8])
+
+b = np.array( [2, 4, 6, 8] )
+>>> b
+array([2, 4, 6, 8])                
